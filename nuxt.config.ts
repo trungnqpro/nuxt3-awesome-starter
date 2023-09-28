@@ -1,5 +1,8 @@
 import { createResolver } from '@nuxt/kit'
 const { resolve } = createResolver(import.meta.url)
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'url'
+import VueI18nVitePlugin from '@intlify/unplugin-vue-i18n/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -89,33 +92,19 @@ export default defineNuxtConfig({
     },
   },
 
-  // todo: feat/localization
-  // module::i18n
-  // i18n: {
-  //   strategy: 'no_prefix',
-  //   defaultLocale: 'en',
-  //   langDir: 'locales',
-  //   vueI18n: {
-  //     fallbackLocale: 'en',
-  //   },
-  //   detectBrowserLanguage: {
-  //     useCookie: true,
-  //     fallbackLocale: 'en',
-  //     redirectOn: 'root',
-  //   },
-  //   locales: [
-  //     {
-  //       code: 'en', // English
-  //       iso: 'en-US',
-  //       name: 'English',
-  //       file: 'en.yml',
-  //     },
-  //     {
-  //       code: 'id', // Indonesia
-  //       iso: 'id-ID',
-  //       name: 'Indonesia',
-  //       file: 'id.yml',
-  //     }
-  //   ]
-  // },
+  build: {
+    transpile: ['vue-i18n'],
+  },
+  vite: {
+    plugins: [
+      VueI18nVitePlugin({
+        include: [
+          resolve(
+            dirname(fileURLToPath(import.meta.url)),
+            './configs/locales/*.json'
+          ),
+        ],
+      }),
+    ],
+  },
 })
